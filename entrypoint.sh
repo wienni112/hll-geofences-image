@@ -1,6 +1,24 @@
 #!/bin/ash
 cd /home/container
 
+# config.yml nur kopieren, wenn sie nicht existiert
+if [ ! -f config.yml ]; then
+    echo "📁 Kopiere Standard config.yml..."
+    cp /opt/defaults/config.yml .
+fi
+
+# seeding.midcap.yml nur kopieren, wenn sie nicht existiert
+if [ ! -f seeding.midcap.yml ]; then
+    echo "📁 Kopiere Standard seeding.midcap.yml..."
+    cp /opt/defaults/seeding.midcap.yml .
+fi
+
+# seeding.lastcap.yml nur kopieren, wenn sie nicht existiert
+if [ ! -f seeding.lastcap.yml ]; then
+    echo "📁 Kopiere Standard seeding.lastcap.yml..."
+    cp /opt/defaults/seeding.lastcap.yml .
+fi
+
 # Konfiguration anpassen, aber nur wenn beschreibbar
 if [ -w /home/container ]; then
     echo "🔧 Konfiguration wird angepasst..."
@@ -15,5 +33,9 @@ if [ -w /home/container ]; then
     sed -i "s/70/${LASTCAP_LIMIT}/g" seeding.lastcap.yml
 fi
 
+# Starte Anwendung
+MODIFIED_STARTUP=$(eval echo "$STARTUP")
+echo ":/home/container$ $MODIFIED_STARTUP"
+
 echo "🚀 Starte hll-geofences..."
-exec ./hll-geofences
+exec $MODIFIED_STARTUP
