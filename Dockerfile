@@ -17,8 +17,8 @@ RUN git clone https://github.com/2KU77B0N3S/hll-geofences.git repo && \
     cd .. && rm -rf repo
 
 # Entrypoint außerhalb von /home/container platzieren
-COPY entrypoint.sh /opt/app/entrypoint.sh
-RUN chmod +x /opt/app/entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Auf container-Nutzer umschalten
 USER container
