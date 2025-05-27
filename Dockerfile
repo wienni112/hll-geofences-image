@@ -5,15 +5,16 @@ RUN apk add --no-cache ca-certificates tzdata git \
     && adduser -D -h /home/container container
 
 # Arbeitsverzeichnis setzen
-WORKDIR /opt/app
+WORKDIR /build
 
+# Repo klonen und Binary + Default-Dateien in /opt/defaults ablegen
 RUN git clone https://github.com/2KU77B0N3S/hll-geofences.git repo && \
+    mkdir -p /opt/defaults && \
     cd repo && \
     go mod download && \
-    go build -mod=mod -o /opt/app/hll-geofences ./cmd/cmd.go && \
-    chmod +x /opt/app/hll-geofences && \
-    cp config.example.yml /opt/app/config.yml && \
-    cp seeding.*.yml /opt/app/ && \
+    go build -mod=mod -o /opt/defaults/hll-geofences ./cmd/cmd.go && \
+    cp config.example.yml /opt/defaults/config.yml && \
+    cp seeding.*.yml /opt/defaults/ && \
     cd .. && rm -rf repo
 
 # Entrypoint außerhalb von /home/container platzieren
