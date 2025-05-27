@@ -50,6 +50,16 @@ echo "LASTCAP_LIMIT=${LASTCAP_LIMIT}" >> .env
 echo "📄 Inhalt von .env:"
 cat .env
 
+# Prüfung auf notwendige Umgebungsvariablen
+if [ -z "$HLL_SERVER_IP" ] || [ -z "$RCON_PORT" ] || [ -z "$RCON_PASSWORD" ]; then
+    echo "❌ Fehler: Eine oder mehrere benötigte Umgebungsvariablen fehlen!"
+    echo "Bitte stelle sicher, dass folgende Variablen gesetzt sind:"
+    echo "  - HLL_SERVER_IP"
+    echo "  - RCON_PORT"
+    echo "  - RCON_PASSWORD"
+    exit 1
+fi
+
 # Starte Anwendung
 MODIFIED_STARTUP=$(eval echo "$STARTUP")
 echo ":/home/container$ $MODIFIED_STARTUP"
