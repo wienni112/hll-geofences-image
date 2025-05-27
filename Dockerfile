@@ -3,20 +3,20 @@ FROM golang:1.24-alpine
 RUN apk add --no-cache ca-certificates tzdata git \
     && adduser -D -h /home/container container
 
-USER container
-ENV USER=container HOME=/home/container
-WORKDIR /home/container
+WORKDIR /opt/app
 
 RUN git clone https://github.com/2KU77B0N3S/hll-geofences.git repo && \
-    cd repo && \
-    echo "🔍 Inhalt von repo/cmd:" && ls -l cmd && \
-    echo "📄 go.mod:" && cat go.mod && \
-    echo "📥 go mod download..." && go mod download && \
-    echo "🧹 go mod tidy..." && go mod tidy && \
-    echo "🔨 go build ./cmd/cmd.go..." && go build -mod=mod -o /home/container/hll-geofences ./cmd/cmd.go && \
-    chmod +x /home/container/hll-geofences && \
-    cp config.example.yml /home/container/config.yml && \
+    cd repo && go mod download && \
+    go build -mod=mod -o /opt/app/hll-geofences ./cmd/cmd.go && \
+    chmod +x /opt/app/hll-geofences && \
+    cp config.example.yml /opt/app/config.yml && \
+    cp -r sync vendor worker seeding.*.yml /opt/app/ && \
     cd .. && rm -rf repo
 
-COPY ./entrypoint.sh /entrypoint.sh
-CMD ["/bin/ash", "/entrypoint.sh"]
+# Entrypoint-Script hinzufügen
+COPY entrypoint.sh /opt/scripts/entrypoint.sh
+RUN chmod +x /opt/scripts/entrypoint.sh
+
+USER container
+ENV USER=container HOME=/home/container
+CMD ["/opt/scripts/entrypoint.sh"]
