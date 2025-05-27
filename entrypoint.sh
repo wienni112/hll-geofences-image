@@ -40,6 +40,16 @@ if [ -w /home/container ]; then
     sed -i "s/70/${LASTCAP_LIMIT}/g" seeding.lastcap.yml
 fi
 
+# .env-Datei schreiben
+echo "HLL_SERVER_IP=${HLL_SERVER_IP}" > .env
+echo "RCON_PORT=${RCON_PORT}" >> .env
+echo "RCON_PASSWORD=${RCON_PASSWORD}" >> .env
+echo "MIDCAP_LIMIT=${MIDCAP_LIMIT}" >> .env
+echo "LASTCAP_LIMIT=${LASTCAP_LIMIT}" >> .env
+# .env-Datei Ausgeben
+echo "📄 Inhalt von .env:"
+cat .env
+
 # Starte Anwendung
 MODIFIED_STARTUP=$(eval echo "$STARTUP")
 echo ":/home/container$ $MODIFIED_STARTUP"
