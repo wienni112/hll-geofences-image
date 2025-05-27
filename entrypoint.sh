@@ -19,6 +19,13 @@ if [ ! -f seeding.lastcap.yml ]; then
     cp /opt/defaults/seeding.lastcap.yml .
 fi
 
+# Binary kopieren, falls sie fehlt
+if [ ! -f ./hll-geofences ]; then
+    echo "📁 Kopiere Binary hll-geofences..."
+    cp /opt/defaults/hll-geofences ./hll-geofences
+    chmod +x ./hll-geofences
+fi
+
 # Konfiguration anpassen, aber nur wenn beschreibbar
 if [ -w /home/container ]; then
     echo "🔧 Konfiguration wird angepasst..."
